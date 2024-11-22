@@ -16,8 +16,13 @@ struct TestFeature: Reducer {
     enum Action {
         case plus
         case task
+        case cancel
         
         case failure(Error)
+    }
+    
+    enum CancelID: Hashable {
+        case delayCancel
     }
     
     func reduce(_ state: inout State, with action: Action) -> Effect<Action> {
@@ -38,6 +43,13 @@ struct TestFeature: Reducer {
                     await send(.failure(error))
                 }
             }
+            .cancelTask(id: CancelID.delayCancel)
+            
+            
+        case .cancel:
+            print("작업 취소")
+            
+            return .cancel(id: CancelID.delayCancel)
             
         case .failure(let error):
             print(error)

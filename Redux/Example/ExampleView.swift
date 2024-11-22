@@ -20,6 +20,9 @@ struct ExampleView: View {
             Button("+ 2sec Delay") {
                 store.send(.task)
             }
+            Button("Cancel") {
+                store.send(.cancel)
+            }
         }
         .padding()
     }

@@ -13,6 +13,8 @@ typealias StoreOf<R: Reducer> = Store<R.State, R.Action>
 final class Store<State, Action>: ObservableObject {
     @Published private(set) var state: State
     private let reducer: any Reducer<State, Action>
+    private let taskMap = AnyValueActor< [_CancelID : Task<Void, Never>]> ([:])
+
     
     init(state: State, reducer: any Reducer<State, Action>) {
         self.state = state
@@ -27,10 +29,34 @@ final class Store<State, Action>: ObservableObject {
 
 extension Store {
     private func handleEffect(_ effect: Effect<Action>) {
+        
         if case let .run(priority, task) = effect.caseOf {
-            Task(priority: priority) {
+            let taskSToStore = Task(priority: priority) {
                 await task { [weak self] newAction in
                     self?.send(newAction)
+                }
+            }
+            
+            if let taskID = effect.taskID {
+                Task {
+                    await taskMap.withValue { value in
+                        value[taskID] = taskSToStore
+                    }
+                }
+            }
+        }
+        
+        if case .cancel = effect.caseOf {
+            Task {
+                await taskMap.withValue { value in
+                    let taskId = effect.taskID
+                    if let taskId {
+                        value.forEach { task in
+                            if task.key.id == taskId.id {
+                                task.value.cancel()
+                            }
+                        }
+                    }
                 }
             }
         }
