@@ -11,7 +11,7 @@ import SwiftUI
 struct ReduxApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ExampleView(store: Store(state: TestFeature.State(), reducer: TestFeature()))
         }
     }
 }

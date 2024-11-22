@@ -1,15 +1,15 @@
 //
-//  ContentView.swift
+//  ExampleView.swift
 //  Redux
 //
-//  Created by Jae hyung Kim on 11/21/24.
+//  Created by Jae hyung Kim on 11/22/24.
 //
 
 import SwiftUI
 
-struct ContentView: View {
-   
-    @StateObject var store: StoreOf<TestFeature> = Store(state: TestFeature.State(), reducer: TestFeature())
+struct ExampleView: View {
+    
+    @StateObject var store: StoreOf<TestFeature>
     
     var body: some View {
         VStack {
@@ -23,8 +23,4 @@ struct ContentView: View {
         }
         .padding()
     }
-}
-
-#Preview {
-    ContentView()
 }
