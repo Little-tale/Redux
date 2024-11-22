@@ -51,8 +51,10 @@ extension Store {
                 await taskMap.withValue { value in
                     let taskId = effect.taskID
                     if let taskId {
+                        
                         value.forEach { task in
                             if task.key.id == taskId.id {
+                                print(value)
                                 task.value.cancel()
                             }
                         }
