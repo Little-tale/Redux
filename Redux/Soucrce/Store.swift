@@ -56,6 +56,7 @@ extension Store {
                             if task.key.id == taskId.id {
                                 print(value)
                                 task.value.cancel()
+                                value.removeValue(forKey: task.key)
                             }
                         }
                     }
