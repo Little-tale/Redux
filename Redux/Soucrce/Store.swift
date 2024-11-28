@@ -33,6 +33,7 @@ extension Store {
         if case let .run(priority, task) = effect.caseOf {
             let taskSToStore = Task(priority: priority) {
                 await task { [weak self] newAction in
+                    if Task.isCancelled { return }
                     self?.send(newAction)
                 }
             }

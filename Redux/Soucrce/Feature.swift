@@ -38,10 +38,10 @@ struct TestFeature: Reducer {
             return .run(priority: .high) { send in
                 do {
                     try await Task.sleep(for: .seconds(2))
-                    await send(.plus)
                 } catch {
                     await send(.failure(error))
                 }
+                await send(.plus)
             }
             .cancelTask(id: CancelID.delayCancel)
             
